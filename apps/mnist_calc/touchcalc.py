@@ -62,6 +62,8 @@ class TouchCalc:
         self._equals_top = self._operand2_top + (int)(self._operand2_height / 2) - (int)(self._equals_height / 2)
 
         self._answer_str = ""
+        self._op1_str = ""
+        self._op2_str = ""
 
         self._clear()
 
@@ -73,6 +75,8 @@ class TouchCalc:
         """Clear the canvas and redraw buttons."""
         self._canvas[:] = 255
         self._answer_str = ""
+        self._op1_str = ""
+        self._op2_str = ""
         self._draw_ui()
 
     def _draw(self, event, x, y, flags, param):
@@ -84,9 +88,13 @@ class TouchCalc:
                     self._clear()
                 if x > self._width - 100:
                     # Bottom right corner was clicked
-                    self.submit()
+                    # self.submit()
+                    pass
             else:
                 self._drawing = True
+            if ( (y > self._equals_top and y < (self._equals_top + self._equals_height)) and
+                 (x > self._equals_left and x < (self._equals_left + self._equals_width))) :
+                self.submit()
 
         elif event == cv2.EVENT_MOUSEMOVE and self._drawing:
             if y < self._menu_bar_threshold:
@@ -109,7 +117,7 @@ class TouchCalc:
         y_coord = self._height - 10
 
         cv2.putText(self._canvas, 'C', (0, y_coord), font_name, font_scale, color, font_thickness)
-        cv2.putText(self._canvas, '=', (self._width - 50, y_coord), font_name, font_scale, color, font_thickness)
+        #cv2.putText(self._canvas, '=', (self._width - 50, y_coord), font_name, font_scale, color, font_thickness)
 
         #operand 1 rect
         cv2.rectangle(self._canvas, (self._operand1_left, self._operand1_top),
@@ -143,13 +151,25 @@ class TouchCalc:
         answer_width = 100
         answer_left = self._equals_left + self._equals_width + self._pad
         answer_top = self._equals_top
-        answer_bottom = answer_top + answer_height
+        #answer_bottom = answer_top + answer_height
 
         if (self._answer_str != ""):
-            answer_font_scale = 4
-            cv2.putText(self._canvas, self._answer_str, (answer_left, answer_bottom), font_name, answer_font_scale, color, font_thickness)
+            answer_font_scale = 8
+            answer_font_thickness = 9
+            answer_size = cv2.getTextSize(self._answer_str, font_name, answer_font_scale, answer_font_thickness)
+            answer_height = answer_size[0][1]
+            answer_width = answer_size[0][0]
+            answer_left = self._equals_left + self._equals_width + self._pad
+            answer_bottom = int(self._equals_top + (self._equals_height/2) + (answer_height/2))
+            cv2.putText(self._canvas, self._answer_str, (answer_left, answer_bottom), font_name, answer_font_scale, color, answer_font_thickness)
+            cv2.putText(self._canvas, self._op1_str,
+                        (self._operand1_left, self._operand1_top + self._operand1_height ),
+                        font_name, font_scale, color, font_thickness)
+            cv2.putText(self._canvas, self._op2_str,
+                        (self._operand2_left, self._operand2_top + self._operand2_height ),
+                        font_name, font_scale, color, font_thickness)
         else:
-            cv2.rectangle(self._canvas, (answer_left, answer_top), (answer_left + answer_width, answer_top+answer_height), (255, 255, 255), cv2.FILLED  )
+            cv2.rectangle(self._canvas, (answer_left, answer_top), (answer_left + answer_width, answer_top+answer_height), (255, 255, 255), cv2.FILLED)
 
 
     def close(self):
@@ -239,7 +259,7 @@ class TouchCalc:
             op1_y1 = 0
 
         op1_image = op1_image[op1_y1:op1_y2, op1_x1:op1_x2]
-        cv2.imshow("op1_image_digits", op1_image)
+        #cv2.imshow("op1_image_digits", op1_image)
 
 
         op2_image = self._canvas[self._operand2_top : self._operand2_top + self._operand2_height,  self._operand2_left : self._operand2_left + self._operand2_width]
@@ -286,7 +306,7 @@ class TouchCalc:
         #op2_x2 = op2_image.shape[1]
 
         op2_image = op2_image[op2_y1:op2_y2, op2_x1:op2_x2]
-        cv2.imshow("op2_image_digits", op2_image)
+        #cv2.imshow("op2_image_digits", op2_image)
 
         #cv2.imshow("op1", op1_image)
         #cv2.imshow("op2", op2_image)
@@ -301,8 +321,8 @@ class TouchCalc:
         op2 = int(op2_labels[0])
         answer_int = op1 + op2
         self._answer_str = str(answer_int)
-
-
+        self._op1_str = str(op1)
+        self._op2_str = str(op2)
 
 
         # Draw the buttons again
@@ -417,8 +437,8 @@ class TouchCalc:
         image_for_inference[:] = ((image_for_inference[:] )*(1.0/255.0))
 
 
-        cv2.imshow("infer image_"+str(self._infer_count%2+1), image_for_inference)
-        cv2.resizeWindow("infer image_"+str(self._infer_count%2+1), 100, 100)
+        #cv2.imshow("infer image_"+str(self._infer_count%2+1), image_for_inference)
+        #cv2.resizeWindow("infer image_"+str(self._infer_count%2+1), 100, 100)
         self._infer_count += 1
 
         # Start the inference by sending to the device/graph
