@@ -216,6 +216,10 @@ class TouchCalc:
         op1_x2 += op_pad
         op1_y1 -= op_pad
         op1_y2 += op_pad
+        if (op1_x1 < 0):
+            op1_x1 = 0
+        if (op1_y1 < 0):
+            op1_y1 = 0
         op1_width = op1_x2 - op1_x1
         op1_height = op1_y2 - op1_y1
         if  (op1_width > op1_height):
@@ -229,6 +233,10 @@ class TouchCalc:
             op1_x1 -= int(diff/2)
             op1_x2 += int(diff/2)
 
+        if (op1_x1 < 0):
+            op1_x1 = 0
+        if (op1_y1 < 0):
+            op1_y1 = 0
 
         op1_image = op1_image[op1_y1:op1_y2, op1_x1:op1_x2]
         cv2.imshow("op1_image_digits", op1_image)
@@ -245,18 +253,37 @@ class TouchCalc:
         op2_x2 += op_pad
         op2_y1 -= op_pad
         op2_y2 += op_pad
+        if (op2_x1 < 0):
+            op2_x1 = 0
+        if (op2_y1 < 0):
+            op2_y1 = 0
+
         op2_width = op2_x2 - op2_x1
         op2_height = op2_y2 - op2_y1
         if  (op2_width > op2_height):
             # wider than high
+            print("wider than high")
             diff = op2_width - op2_height
+            print ("diff: " + str(diff))
             op2_y1 -= int(diff/2)
             op2_y2 += int(diff/2)
         else :
             # higher than wide
+            print("higher than wide")
+            print ("diff: " + str(diff))
             diff = op2_height - op2_width
             op2_x1 -= int(diff/2)
             op2_x2 += int(diff/2)
+        if (op2_x1 < 0):
+            op2_x1 = 0
+        if (op2_y1 < 0):
+            op2_y1 = 0
+
+        # nps try to just use whole box.
+        #op2_y1 = 0
+        #op2_y2 = op2_image.shape[0]
+        #op2_x1 = 0
+        #op2_x2 = op2_image.shape[1]
 
         op2_image = op2_image[op2_y1:op2_y2, op2_x1:op2_x2]
         cv2.imshow("op2_image_digits", op2_image)
