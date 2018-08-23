@@ -97,11 +97,17 @@ profile: prototxt
 .PHONY: compile_model
 compile_model: deps
 	@echo "\nmaking compile"
-	${NCCOMPILE} --data_type FP16 --input_model ${CAFFEMODEL_FILENAME} --input_proto ${PROTOTXT_FILENAME}
+	@if [ -e ${GRAPH_FILENAME_BASE}.xml ] ; \
+	then \
+		echo "compiled model already exists"; \
+	else \
+		echo "Compiling model"; \
+		${NCCOMPILE} --data_type FP16 --input_model ${CAFFEMODEL_FILENAME} --input_proto ${PROTOTXT_FILENAME}; \
+	fi
 
 .PHONY: ncsdk_compile_model
 ncsdk_compile_model: deps
-	@echo "\nmaking compile"
+	@echo "\nmaking compile_model"
 	${NCSDK_COMPILE} -w ${CAFFEMODEL_FILENAME} -s 12 ${PROTOTXT_FILENAME}
 
 
@@ -118,9 +124,9 @@ run: run_cpp
 	@echo "\nmaking run"
 
 .PHONY: ncsdk_run
-ncsdk_run: run_cpp 
+ncsdk_run: deps data ncsdk_compile_model
 	@echo "\nmaking ncsdk_run"
-	./run.py
+	python3 ./run.py
 
 .PHONY:	compile_cpp
 compile_cpp:  
@@ -133,7 +139,7 @@ run_cpp: all
 	${SIMPLE_CLASSIFIER_RELATIVE_DIR}/build/simple_classifier ${GRAPH_FILENAME_BASE}.xml ${IMAGES_RELATIVE_DIR}/${TEST_IMAGE_FILENAME}; 
 
 .PHONY: run_py
-run_py: all
+run_py: deps data compile_model
 	@echo "\nmaking run_cpp"
 	python3 ${SIMPLE_CLASSIFIER_PY_RELATIVE_DIR}/simple_classifier.py -m ${GRAPH_FILENAME_BASE}.xml -d MYRIAD -i ${IMAGES_RELATIVE_DIR}/${TEST_IMAGE_FILENAME}; 
 
