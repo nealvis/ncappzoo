@@ -44,12 +44,18 @@ def build_argparser():
 
 def main():
 
-    args = build_argparser()
     try:
-        args.parse_args()
+        args = build_argparser().parse_args()
     except:
+        args = build_argparser()
         args.print_help()
         raise
+
+    #try:
+    #    args.parse_args()
+    #except:
+    #    args.print_help()
+    #    raise
 
     model_xml = args.model
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
