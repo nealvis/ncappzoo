@@ -20,8 +20,6 @@ all: deps data compile_model compile_cpp
 data:
 	@echo "\nmaking data"
 	(cd ../../data/ilsvrc12; make)
-	@sed -i 's/\r//' run.py
-	@chmod +x run.py
 
 .PHONY: prototxt
 prototxt: data
@@ -78,7 +76,7 @@ check: prototxt caffemodel
 	@echo "\nCheck not implemented yet."
 
 .PHONY: run
-run: run_cpp 
+run: run_py 
 	@echo "\nmaking run"
 
 .PHONY:	compile_cpp
@@ -86,10 +84,10 @@ compile_cpp:
 	@echo "\nmaking compile_cpp"
 	(cd ${SIMPLE_CLASSIFIER_RELATIVE_DIR}; make compile_cpp; cd -)
 
-.PHONY: run_cpp
-run_cpp: all
-	@echo "\nmaking run_cpp"
-	${SIMPLE_CLASSIFIER_RELATIVE_DIR}/build/simple_classifier ${GRAPH_FILENAME_BASE}.xml ${IMAGES_RELATIVE_DIR}/${TEST_IMAGE_FILENAME}; 
+.PHONY: run_py
+run_py: all
+	@echo "\nmaking run_py"
+	python3 mtbf.py
 
 .PHONY: help
 help:

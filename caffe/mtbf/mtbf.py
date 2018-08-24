@@ -27,7 +27,7 @@ from openvino.inference_engine import IENetwork, IEPlugin
 def build_argparser():
     parser = ArgumentParser()
     parser.add_argument("-m", "--model", help="Path to an .xml file with a trained model.", required=False, default="./bvlc_googlenet.xml", type=str)
-    parser.add_argument("-i", "--input", help="Path to a folder with images or path to an image files", required=False, default="./val_top1_true.txt",
+    parser.add_argument("-i", "--input", help="Path to a text file with image file names and true top 1 results. Each line has a full path to image file, a tab, and the true top 1 result.  An inference will be executed for each file and top 1 compared with the true value from this file.", required=False, default="./val_top1_true.txt",
                         type=str)
     parser.add_argument("-l", "--cpu_extension",
                         help="MKLDNN (CPU)-targeted custom layers.Absolute path to a shared library with the kernels "
@@ -35,7 +35,7 @@ def build_argparser():
     parser.add_argument("-pp", "--plugin_dir", help="Path to a plugin folder", type=str, default=None)
     parser.add_argument("-d", "--device",
                         help="Specify the target device to infer on; CPU, GPU, FPGA or MYRIAD is acceptable. Sample "
-                             "will look for a suitable plugin for device specified (CPU by default)", default="MYRIAD",
+                             "will look for a suitable plugin for device specified (MYRIAD by default)", default="MYRIAD",
                         type=str)
     #parser.add_argument("-nt", "--number_top", help="Number of top results", default=10, type=int)
 
@@ -43,7 +43,14 @@ def build_argparser():
 
 
 def main():
-    args = build_argparser().parse_args()
+
+    args = build_argparser()
+    try:
+        args.parse_args()
+    except:
+        args.print_help()
+        raise
+
     model_xml = args.model
     model_bin = os.path.splitext(model_xml)[0] + ".bin"
 
