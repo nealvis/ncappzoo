@@ -1,0 +1,11 @@
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00035343.jpeg	948
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00025311.jpeg	685
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00044998.jpeg	613
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00000825.jpeg	137
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00038136.jpeg	495
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00031521.jpeg	28
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00000065.jpeg	842
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00021821.jpeg	432
+/data/ILSVR2012-complete/val/ILSVRC2012_val_00016651.jpeg	372
+
+
