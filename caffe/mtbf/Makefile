@@ -14,7 +14,7 @@ IMAGES_RELATIVE_DIR = ../../data/images
 TEST_IMAGE_FILENAME = nps_electric_guitar.png
 
 .PHONY: all
-all: deps data compile_model compile_cpp
+all: deps data compile_model 
 
 .PHONY: data
 data:
@@ -79,11 +79,6 @@ check: prototxt caffemodel
 run: run_py 
 	@echo "\nmaking run"
 
-.PHONY:	compile_cpp
-compile_cpp:  
-	@echo "\nmaking compile_cpp"
-	(cd ${SIMPLE_CLASSIFIER_RELATIVE_DIR}; make compile_cpp; cd -)
-
 .PHONY: run_py
 run_py: all
 	@echo "\nmaking run_py"
@@ -99,7 +94,6 @@ help:
 	@echo "  make prototxt - downloads and adds input shape to Caffe prototxt file";
 	@echo "  make caffemodel - downloads the caffemodel for the network"
 	@echo "  make compile_model - runs model compiler for the network";
-	@echo "  make compile_cpp - builds the C++ example example";
 	@echo "  make run - builds and runs the C++ example program";
 	@echo "  make clean - removes all created content"
 
