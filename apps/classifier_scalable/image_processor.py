@@ -224,9 +224,6 @@ class ImageProcessor:
                 for one_network_proc in self._network_processor_list:
 
                     preprocessed_image = self._preprocessed_image_list[image_index]
-                    image_index += 1
-                    if (image_index >= len(self._preprocessed_image_list)):
-                        image_index = 0
 
                     # wait until there is room on the network processor's input queue.
                     # if we don't do this and clean up is called from another thread then
@@ -236,6 +233,9 @@ class ImageProcessor:
 
                     if (not (self._end_flag)):
                         one_network_proc.start_preprocessed_aysnc_inference(preprocessed_image, self._original_image_list[image_index])
+                        image_index += 1
+                        if (image_index >= len(self._preprocessed_image_list)):
+                            image_index = 0
                     else:
                         done=True
                         break

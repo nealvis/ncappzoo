@@ -84,8 +84,8 @@ def overlay_on_image(display_image:numpy.ndarray, label, prob, fps:float):
     label_text = label + " (" + str(percentage) + "%)"
     box_left = 0
     box_top = 0 # int(object_info[base_index + 4] * source_image_height)
-    box_right = 639 # int(object_info[base_index + 5] * source_image_width)
-    box_bottom = 479# int(object_info[base_index + 6] * source_image_height)
+    box_right = source_image_width-1 # int(object_info[base_index + 5] * source_image_width)
+    box_bottom = source_image_height-1 # int(object_info[base_index + 6] * source_image_height)
 
     box_color = (255, 128, 0)  # box color
     box_thickness = 2
@@ -122,9 +122,7 @@ def overlay_on_image(display_image:numpy.ndarray, label, prob, fps:float):
         box_coord_left = 0
         box_coord_top = 0
         box_coord_right = box_coord_left + fps_size[0] + text_pad * 2
-        #if (box_coord_right > box_right) : box_coord_right = box_right
         box_coord_bottom = box_coord_top + fps_size[1] + text_pad * 2
-        #if (box_coord_bottom > box_bottom) : box_coord_bottom = box_bottom
 
         fps_left = box_coord_left + text_pad
         fps_bottom = box_coord_bottom - text_pad
@@ -134,11 +132,11 @@ def overlay_on_image(display_image:numpy.ndarray, label, prob, fps:float):
         fps_image = numpy.full((box_coord_bottom - box_coord_top, box_coord_right - box_coord_left, 3), label_background_color, numpy.uint8)
         cv2.putText(fps_image, fps_text, (fps_left, fps_bottom), cv2.FONT_HERSHEY_SIMPLEX, fps_multiplier, label_text_color,  fps_thickness)
 
-        fps_transparency = 0.4
+        fps_transparency = 0.2
         cv2.addWeighted(display_image[box_coord_top:box_coord_bottom, box_coord_left:box_coord_right], 1.0 - fps_transparency,
                         fps_image, fps_transparency, 0.0, display_image[box_coord_top:box_coord_bottom, box_coord_left:box_coord_right])
         
-    if (False and show_device_count):
+    if (show_device_count):
         ncs_count_text = "Devices: " + str(device_count)
 
         ncs_count_thickness = 2
@@ -156,7 +154,7 @@ def overlay_on_image(display_image:numpy.ndarray, label, prob, fps:float):
         ncs_count_image = numpy.full((ncs_count_box_coord_bottom - ncs_count_box_coord_top, ncs_count_box_coord_right - ncs_count_box_coord_left, 3), ncs_count_label_background_color, numpy.uint8)
         cv2.putText(ncs_count_image, ncs_count_text, (0+ncs_count_text_pad, ncs_count_size[1] + ncs_count_text_pad ), cv2.FONT_HERSHEY_SIMPLEX, ncs_count_multiplier, ncs_count_label_text_color,  ncs_count_thickness)
 
-        ncs_count_transparency = 0.4
+        ncs_count_transparency = 0.2
         cv2.addWeighted(display_image[ncs_count_box_coord_top:ncs_count_box_coord_bottom, ncs_count_box_coord_left:ncs_count_box_coord_right], 1.0 - ncs_count_transparency,
                         ncs_count_image, ncs_count_transparency, 0.0, display_image[ncs_count_box_coord_top:ncs_count_box_coord_bottom, ncs_count_box_coord_left:ncs_count_box_coord_right])
 
@@ -359,19 +357,6 @@ def print_hot_keys():
     print("q  : Quit application")
     print("")
 
-def print_hot_keys():
-    """Prints hot key bindings for the program.
-
-    :return: None
-    """
-    print("")
-    print("Hot keys while running and GUI in focus:")
-    print("-----------------------------------------------")
-    print("b/B: Decrement/Increment minimum box confidence")
-    print("f  : Toggle FPS display in GUI")
-    print("d  : Toggle device count display in GUI")
-    print("q  : Quit application")
-    print("")
 
 def main():
     """Main function for the program.  Everything starts here.
