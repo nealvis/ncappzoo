@@ -21,7 +21,7 @@ from argparse import ArgumentParser
 import cv2
 import numpy as np
 
-from openvino.inference_engine import IENetwork, IEPlugin
+from ubuntu16.openvino.inference_engine import IENetwork, IEPlugin
 
 
 def build_argparser():
@@ -71,7 +71,7 @@ def main():
     input_blob = next(iter(net.inputs))
     out_blob = next(iter(net.outputs))
     # Read and pre-process input image
-    n, c, h, w = net.inputs[input_blob]
+    n, c, h, w = net.inputs[input_blob].shape
 
     # Load network to the plugin
     exec_net = plugin.load(network=net)
